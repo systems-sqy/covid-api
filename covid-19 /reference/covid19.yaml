@@ -1,0 +1,220 @@
+openapi: 3.0.0
+info:
+  title: COVID19 ES API
+  description: "Datos del coronavirus en España. API con los datos oficiales a nivel país, comunidades autonomas y provincias"
+  contact:
+    email: hola@secuoyas.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  version: "0.2"
+servers:
+  - url: "https://covid19.secuoyas.com/api/v1"
+    description: COVID-19-es API
+tags:
+  - name: España
+    description: Datos a nivel nacional
+  - name: CCAA
+    description: Datos por comunidad autónoma
+  - name: Provincias
+    description: Datos por provincia
+paths:
+  /es:
+    get:
+      tags:
+        - España
+      summary: Datos de España.
+      description: Optional extended description in Markdown.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Casos"
+  /es/ccaa:
+    get:
+      tags:
+        - CCAA
+      summary: Datos de una CCAA.
+      description: Optional extended description in Markdown.
+      parameters:
+        - in: query
+          name: fecha
+          required: false
+          description: Fecha que consultar en formato YYYY-MM-DD
+          schema:
+            type: string
+        - in: query
+          name: ultimodia
+          required: false
+          description: "ultimodia=true devuelve los datos del último dia, este parámetro anula al parámetro fecha"
+          schema:
+            type: string
+        - in: query
+          name: codigo
+          required: false
+          description: Código ISO de las CCAA
+          schema:
+            type: string
+            enum:
+              - ES-AN
+              - ES-AR
+              - ES-AS
+              - ES-CN
+              - ES-CB
+              - ES-CM
+              - ES-CL
+              - ES-CT
+              - ES-EX
+              - ES-GA
+              - ES-IB
+              - ES-RI
+              - ES-MD
+              - ES-MC
+              - ES-NC
+              - ES-PV
+              - ES-VC
+              - ES-CE
+              - ES-ME
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Casos"
+  /es/ccaa/provincia:
+    get:
+      tags:
+        - Provincias
+      summary: Datos de una provincia en concreto.
+      description: Optional extended description in Markdown.
+      parameters:
+        - in: path
+          name: provincia
+          required: true
+          description: Código ISO de las CCAA
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Casos"
+components:
+  schemas:
+    Casos:
+      type: object
+      properties:
+        trace:
+          type: object
+          properties:
+            info:
+              $ref: "#/components/schemas/Info"
+            contacto:
+              $ref: "#/components/schemas/Contacto"
+        timeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/Date"
+    Info:
+      type: object
+      properties:
+        nombre:
+          type: string
+        creado:
+          type: string
+        fecha:
+          type: string
+        fechaInicio:
+          type: string
+        fechaFin:
+          type: string
+        numeroFechas:
+          type: number
+        periodo:
+          type: string
+        nivelAdministrativo:
+          type: string
+        nombreLugar:
+          type: string
+        codigoIsoLugar:
+          type: string
+        numeroLugares:
+          type: number
+    Contacto:
+      type: object
+      properties:
+        nombreEmpresa:
+          type: string
+          example: Secuoyas
+        url:
+          type: string
+          example: "http://secuoyas.com"
+        email:
+          type: string
+          example: hola@secuoyas.com
+    Date:
+      type: object
+      properties:
+        nombre:
+          type: string
+        fecha:
+          type: string
+        fechaInicio:
+          type: string
+        fechFin:
+          type: string
+        numeroFechas:
+          type: number
+        periodo:
+          type: string
+        regiones:
+          type: array
+          items:
+            $ref: "#/components/schemas/Region"
+    Region:
+      type: object
+      properties:
+        nombre:
+          type: string
+        nivelAdministrativo:
+          type: string
+        nombreLugar:
+          type: string
+        codigoIsoLugar:
+          type: string
+        long:
+          type: number
+        lat:
+          type: number
+        data:
+          $ref: "#/components/schemas/CasosData"
+    CasosData:
+      type: object
+      properties:
+        casosConfirmados:
+          type: number
+        casosUci:
+          type: number
+        casosFallecidos:
+          type: number
+        casosHospitalizados:
+          type: number
+        casosRecuperados:
+          type: number
+        casosConfirmadosDiario:
+          type: number
+        casosUciDiario:
+          type: number
+        casosFallecidosDiario:
+          type: number
