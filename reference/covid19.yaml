@@ -1,15 +1,17 @@
 openapi: 3.0.0
 info:
   title: COVID19 ES API
-  description: "Datos del coronavirus en España. API con los datos oficiales a nivel país, comunidades autonomas y provincias"
+  description: 'Datos del coronavirus en España. API con los datos oficiales a nivel país, comunidades autonomas y provincias'
   contact:
     email: hola@secuoyas.com
+    name: Secuoyas
+    url: 'http://secuoyas.com'
   license:
     name: Apache 2.0
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-  version: "0.2"
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: '0.2'
 servers:
-  - url: "https://covid19.secuoyas.com/api/v1"
+  - url: 'https://covid19.secuoyas.com/api/v1'
     description: COVID-19-es API
 tags:
   - name: España
@@ -26,14 +28,27 @@ paths:
       summary: Datos de España.
       description: Optional extended description in Markdown.
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Casos"
+                  $ref: '#/components/schemas/Casos'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: fecha
+          description: Dia en formato YYYY-MM-DD del dia que quieres pedir los datos
+        - schema:
+            type: boolean
+          in: query
+          name: ultimodia
+          description: 'ultimodia=true te devuelve los datos del último dia, y anula al parametro fecha cuando se usan a la vez'
+      operationId: ''
+      requestBody: {}
   /es/ccaa:
     get:
       tags:
@@ -44,19 +59,19 @@ paths:
         - in: query
           name: fecha
           required: false
-          description: Fecha que consultar en formato YYYY-MM-DD
+          description: ?fecha=YYYY-MM-DD | Fecha que consultar en formato YYYY-MM-DD
           schema:
             type: string
         - in: query
           name: ultimodia
           required: false
-          description: "ultimodia=true devuelve los datos del último dia, este parámetro anula al parámetro fecha"
+          description: ?ultimodia=true | devuelve los datos del último dia, este parámetro anula al parámetro fecha'
           schema:
             type: string
         - in: query
           name: codigo
           required: false
-          description: Código ISO de las CCAA
+          description: ?codigo=es-an | donde es-an es un código ISO de las CCAA 
           schema:
             type: string
             enum:
@@ -80,36 +95,14 @@ paths:
               - ES-CE
               - ES-ME
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Casos"
-  /es/ccaa/provincia:
-    get:
-      tags:
-        - Provincias
-      summary: Datos de una provincia en concreto.
-      description: Optional extended description in Markdown.
-      parameters:
-        - in: path
-          name: provincia
-          required: true
-          description: Código ISO de las CCAA
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Casos"
+                  $ref: '#/components/schemas/Casos'
 components:
   schemas:
     Casos:
@@ -119,13 +112,13 @@ components:
           type: object
           properties:
             info:
-              $ref: "#/components/schemas/Info"
+              $ref: '#/components/schemas/Info'
             contacto:
-              $ref: "#/components/schemas/Contacto"
+              $ref: '#/components/schemas/Contacto'
         timeline:
           type: array
           items:
-            $ref: "#/components/schemas/Date"
+            $ref: '#/components/schemas/Date'
     Info:
       type: object
       properties:
@@ -159,7 +152,7 @@ components:
           example: Secuoyas
         url:
           type: string
-          example: "http://secuoyas.com"
+          example: 'http://secuoyas.com'
         email:
           type: string
           example: hola@secuoyas.com
@@ -181,7 +174,7 @@ components:
         regiones:
           type: array
           items:
-            $ref: "#/components/schemas/Region"
+            $ref: '#/components/schemas/Region'
     Region:
       type: object
       properties:
@@ -198,7 +191,7 @@ components:
         lat:
           type: number
         data:
-          $ref: "#/components/schemas/CasosData"
+          $ref: '#/components/schemas/CasosData'
     CasosData:
       type: object
       properties:
@@ -218,3 +211,4 @@ components:
           type: number
         casosFallecidosDiario:
           type: number
+  securitySchemes: {}
