@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: COVID19 ES API
-  description: 'Datos del coronavirus en España. API con los datos oficiales a nivel país, comunidades autonomas y provincias'
+  description: "# Descripción\n\nAPI con los datos de administraciones oficiales del coronavirus de España y por CCAA\n\n## España\n*Para consultar los datos del coronavirus de españa* \n\n```/api/v1/es```\n\n\n- ```?fecha=YYYY-MM-DD``` para solicitar los datos de un dia concreto\n- ```?ultimodia=true``` para solicitar los datos del último dia disponible\n\n## Comunidades Autónomas  \n      *Para consultar los datos del coronavirus de las CCAA*\n\n ```/api/v1/es/ccaa``` \n\n- ```?fecha=YYYY-MM-DD``` para solicitar los datos de un dia concreto\n- ```?ultimodia=true``` para solicitar los datos del último dia disponible\n- ```?codigo=CODE``` para solicitar los datos de una camunidad especifica donde CODE es el código iso de la comunidad autónoma. ej es-md para Madrid\n"
   contact:
     email: hola@secuoyas.com
     name: Secuoyas
@@ -9,7 +9,7 @@ info:
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: '0.2'
+  version: '0.4'
 servers:
   - url: 'https://covid19.secuoyas.com/api/v1'
     description: COVID-19-es API
@@ -36,6 +36,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Casos'
+          headers: {}
       parameters:
         - schema:
             type: string
@@ -47,8 +48,7 @@ paths:
           in: query
           name: ultimodia
           description: 'ultimodia=true te devuelve los datos del último dia, y anula al parametro fecha cuando se usan a la vez'
-      operationId: ''
-      requestBody: {}
+      operationId: getEs
   /es/ccaa:
     get:
       tags:
@@ -59,19 +59,19 @@ paths:
         - in: query
           name: fecha
           required: false
-          description: ?fecha=YYYY-MM-DD | Fecha que consultar en formato YYYY-MM-DD
+          description: '?fecha=YYYY-MM-DD | Fecha que consultar en formato YYYY-MM-DD'
           schema:
             type: string
         - in: query
           name: ultimodia
           required: false
-          description: ?ultimodia=true | devuelve los datos del último dia, este parámetro anula al parámetro fecha'
+          description: "?ultimodia=true | devuelve los datos del último dia, este parámetro anula al parámetro fecha'"
           schema:
             type: string
         - in: query
           name: codigo
           required: false
-          description: ?codigo=es-an | donde es-an es un código ISO de las CCAA 
+          description: '?codigo=es-an | donde es-an es un código ISO de las CCAA'
           schema:
             type: string
             enum:
@@ -103,6 +103,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Casos'
+      operationId: getCcaa
 components:
   schemas:
     Casos:
